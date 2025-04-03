@@ -3,26 +3,18 @@ package com.example;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.List;
-import java.util.Random;
-
 public class Gui extends Application {
 
-    public static int coins = 100; // Variable to store the current coin count, now static for accessibility
-    public static Label coinsLabel; // Reference to the coin label for updating
-    public static Label rollDisplay; // Reference to the roll display for updating
-
-    // List of obtainable items
-    private static final List<String> obtainableItems = List.of(
-            "Sword", "Shield", "Bow", "Potion", "Helmet",
-            "Armor", "Boots", "Ring", "Amulet", "Dagger"
-    );
+    public static int coins = 100; // Public coins variable
+    public static Label coinsLabel; // Public label to show coins
+    public static Label rollDisplay; // Public label for roll display
 
     public static void main(String[] args) {
         launch(args); // Launches the JavaFX application
@@ -30,7 +22,7 @@ public class Gui extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("RNG Game");
+        primaryStage.setTitle("RNG Game"); // Sets the window title
 
         // Root Pane with Dark Background
         Pane root = new Pane();
@@ -69,14 +61,14 @@ public class Gui extends Application {
         });
         root.getChildren().add(inventoryButton);
 
-        // Index Button
+        // Index Button - Opens Index GUI
         Button indexButton = new Button("Index");
         indexButton.setLayoutX(10);
         indexButton.setLayoutY(465);
         indexButton.setPrefSize(120, 30);
         indexButton.setOnAction(e -> {
             try {
-                new ItemIndex().start(new Stage()); // Opens ItemIndex GUI
+                new ItemIndex().start(new Stage()); // Opens Index GUI
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -89,22 +81,12 @@ public class Gui extends Application {
         rollButton.setLayoutY(430);
         rollButton.setPrefSize(200, 50);
         rollButton.setOnAction(e -> {
-            // Choose a random item from the list
-            String rolledItem = getRandomItem();
-
-            // Update the rolled item in the Inventory
-            Inventory.addRolledItem(rolledItem);
-
-            // Display rolled item in roll display
-            rollDisplay.setText("You rolled: " + rolledItem);
-
-            // Add coins for rolling
             coins += 10;
             coinsLabel.setText("Coins: " + coins); // Updates coin count
         });
         root.getChildren().add(rollButton);
 
-        // Admin Button - Opens Admin GUI for managing coins and forced rolls
+        // Admin Button - Opens Admin GUI
         Button adminButton = new Button("Admin");
         adminButton.setLayoutX(500);
         adminButton.setLayoutY(10);
@@ -124,15 +106,8 @@ public class Gui extends Application {
         primaryStage.show();
     }
 
-    // Helper method to randomly select an item from obtainable items
-    private String getRandomItem() {
-        Random rand = new Random();
-        return obtainableItems.get(rand.nextInt(obtainableItems.size()));
-    }
-
-    // Method to update the Roll Display from Admin or other sections
+    // Method to update the roll display (for Admin.java)
     public static void updateRollDisplay(String text) {
-        // Update the roll display directly
-        rollDisplay.setText(text); // Set the new text to the rollDisplay label
+        rollDisplay.setText(text);
     }
 }

@@ -1,47 +1,64 @@
 package com.example;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Rng {
-    // Define items and their rarities (higher rarity means more rare)
-    public static final String[] obtainableItems = {
-            "Sword", "Shield", "Bow", "Potion", "Helmet",
-            "Armor", "Boots", "Ring", "Amulet", "Dagger"
-    };
+    // Item and its corresponding rarity
+    private static final Map<String, String> itemRarities = new HashMap<>();
+    static {
+        itemRarities.put("Sword", "Common");
+        itemRarities.put("Shield", "Rare");
+        itemRarities.put("Bow", "Epic");
+        itemRarities.put("Potion", "Common");
+        itemRarities.put("Helmet", "Rare");
+        itemRarities.put("Armor", "Epic");
+        itemRarities.put("Boots", "Common");
+        itemRarities.put("Ring", "Legendary");
+        itemRarities.put("Amulet", "Mythic");
+        itemRarities.put("Dagger", "Rare");
+    }
 
-    // Define rarity probabilities (sum must be 100)
-    private static final int[] rarities = {
-            50, // 50% chance for Sword
-            20, // 20% chance for Shield
-            15, // 15% chance for Bow
-            5,  // 5% chance for Potion
-            5,  // 5% chance for Helmet
-            3,  // 3% chance for Armor
-            1,  // 1% chance for Boots
-            1,  // 1% chance for Ring
-            0,  // 0% chance for Amulet (not used in this example)
-            0   // 0% chance for Dagger (not used in this example)
-    };
+    // Probability weights for each rarity
+    private static final Map<String, Integer> rarityWeights = new HashMap<>();
+    static {
+        rarityWeights.put("Common", 50); // 50% chance for Common
+        rarityWeights.put("Rare", 30);   // 30% chance for Rare
+        rarityWeights.put("Epic", 15);   // 15% chance for Epic
+        rarityWeights.put("Legendary", 4); // 4% chance for Legendary
+        rarityWeights.put("Mythic", 1);  // 1% chance for Mythic
+        rarityWeights.put("Secret", 0);  // 0% for Secret, but can be modified later if needed
+    }
 
-    // Roll an item based on rarities
-    public static String rollItem() {
+    public static String getRandomItem() {
         Random rand = new Random();
-        int totalChance = 0;
+        List<String> obtainableItems = new ArrayList<>(itemRarities.keySet());
 
-        // Calculate total chance (sum of rarities)
-        for (int rarity : rarities) {
-            totalChance += rarity;
-        }
+        // Simulate the random roll based on rarity weights
+        int totalWeight = rarityWeights.values().stream().mapToInt(Integer::intValue).sum();
+        int randomRoll = rand.nextInt(totalWeight);
 
-        int roll = rand.nextInt(totalChance); // Get random number between 0 and totalChance
-        int cumulativeChance = 0;
+        // Pick an item based on weight distribution
+        String chosenItem = null;
+        int currentWeight = 0;
+        for (String item : obtainableItems) {
+            String rarity = itemRarities.get(item);
+            currentWeight += rarityWeights.get(rarity);
 
-        for (int i = 0; i < obtainableItems.length; i++) {
-            cumulativeChance += rarities[i];
-            if (roll < cumulativeChance) {
-                return obtainableItems[i];
+            if (randomRoll < currentWeight) {
+                chosenItem = item;
+                break;
             }
         }
-        return null; // Default, shouldn't happen
+
+        return chosenItem + " (" + itemRarities.get(chosenItem) + ")";
+    }
+
+    // Provide access to itemRarities via a getter method
+    public static Map<String, String> getItemRarities() {
+        return itemRarities;
     }
 }
