@@ -14,7 +14,9 @@ import java.util.Random;
 
 public class Gui extends Application {
 
-    private int coins = 100; // Variable to store the current coin count
+    public static int coins = 100; // Variable to store the current coin count, now static for accessibility
+    public static Label coinsLabel; // Reference to the coin label for updating
+    public static Label rollDisplay; // Reference to the roll display for updating
 
     // List of obtainable items
     private static final List<String> obtainableItems = List.of(
@@ -36,7 +38,7 @@ public class Gui extends Application {
         root.setStyle("-fx-background-color: #1e1e1e;"); // Dark background
 
         // Coins Display
-        Label coinsLabel = new Label("Coins: " + coins);
+        coinsLabel = new Label("Coins: " + coins); // Shows initial coin count
         coinsLabel.setLayoutX(10);
         coinsLabel.setLayoutY(10);
         coinsLabel.setFont(new Font(16));
@@ -44,7 +46,7 @@ public class Gui extends Application {
         root.getChildren().add(coinsLabel);
 
         // Roll Display Label
-        Label rollDisplay = new Label("\"Roll Display\"");
+        rollDisplay = new Label("\"Roll Display\"");
         rollDisplay.setLayoutX(100);
         rollDisplay.setLayoutY(150);
         rollDisplay.setPrefSize(400, 100);
@@ -81,7 +83,7 @@ public class Gui extends Application {
         });
         root.getChildren().add(indexButton);
 
-        // Roll Button
+        // Roll Button - Centered and Bigger
         Button rollButton = new Button("ROLL");
         rollButton.setLayoutX(200);
         rollButton.setLayoutY(430);
@@ -102,11 +104,18 @@ public class Gui extends Application {
         });
         root.getChildren().add(rollButton);
 
-        // Admin Button
+        // Admin Button - Opens Admin GUI for managing coins and forced rolls
         Button adminButton = new Button("Admin");
         adminButton.setLayoutX(500);
         adminButton.setLayoutY(10);
         adminButton.setPrefSize(80, 30);
+        adminButton.setOnAction(e -> {
+            try {
+                new Admin().start(new Stage()); // Opens Admin GUI
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
         root.getChildren().add(adminButton);
 
         // Scene and Stage Setup
@@ -119,5 +128,11 @@ public class Gui extends Application {
     private String getRandomItem() {
         Random rand = new Random();
         return obtainableItems.get(rand.nextInt(obtainableItems.size()));
+    }
+
+    // Method to update the Roll Display from Admin or other sections
+    public static void updateRollDisplay(String text) {
+        // Update the roll display directly
+        rollDisplay.setText(text); // Set the new text to the rollDisplay label
     }
 }
