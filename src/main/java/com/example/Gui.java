@@ -81,8 +81,37 @@ public class Gui extends Application {
         rollButton.setLayoutY(430);
         rollButton.setPrefSize(200, 50);
         rollButton.setOnAction(e -> {
-            coins += 10;
-            coinsLabel.setText("Coins: " + coins); // Updates coin count
+            String rolledItem = Rng.getRandomItem();
+            Inventory.addRolledItem(rolledItem);
+            rollDisplay.setText("You rolled: " + rolledItem);
+
+            String rarity = rolledItem.substring(rolledItem.indexOf('(') + 1, rolledItem.indexOf(')'));
+            int reward = 0;
+
+            // Rewriting the switch expression as a regular switch
+            switch (rarity) {
+                case "Common":
+                    reward = 10;
+                    break;
+                case "Rare":
+                    reward = 20;
+                    break;
+                case "Epic":
+                    reward = 40;
+                    break;
+                case "Legendary":
+                    reward = 75;
+                    break;
+                case "Mythic":
+                    reward = 150;
+                    break;
+                default:
+                    reward = 0;
+                    break;
+            }
+
+            coins += reward;
+            coinsLabel.setText("Coins: " + coins);
         });
         root.getChildren().add(rollButton);
 

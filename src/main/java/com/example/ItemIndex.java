@@ -53,25 +53,18 @@ public class ItemIndex extends Application {
         // List of items moved up by 10 units
         int yOffset = 40;  // Starting y position decreased by 10 units
         for (String item : items) {
-            Button itemButton = new Button(item.split(" - ")[0]); // Display item name only
-            itemButton.setLayoutX(350);  // Position the list on the right side
+            Button itemButton = new Button(item.split(" - ")[0]);  // Display item name
+            itemButton.setLayoutX(350);  // Keep it centered
             itemButton.setLayoutY(yOffset);
             itemButton.setPrefSize(200, 30);
-
-            // Display description when an item is clicked
-            itemButton.setOnAction(e -> itemDescription.setText(item));
-
+            itemButton.setStyle("-fx-background-color: #3a3a3a; -fx-text-fill: white; -fx-border-color: white;");
+            itemButton.setOnAction(e -> {
+                String description = item.split(" - ")[1];  // Get item description
+                itemDescription.setText(description);  // Update the description display
+            });
             root.getChildren().add(itemButton);
-            yOffset += 40; // Space between buttons
+            yOffset += 40;  // Increase the offset for each button
         }
-
-        // Close Button (Top Left)
-        Button closeButton = new Button("Close");
-        closeButton.setLayoutX(10);
-        closeButton.setLayoutY(10);
-        closeButton.setPrefSize(80, 30);
-        closeButton.setOnAction(e -> primaryStage.close());
-        root.getChildren().add(closeButton);
 
         // Scene and Stage Setup
         Scene scene = new Scene(root);
