@@ -1,64 +1,62 @@
 package com.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class Rng {
-    // Item and its corresponding rarity
-    private static final Map<String, String> itemRarities = new HashMap<>();
-    static {
-        itemRarities.put("Sword", "Common");
-        itemRarities.put("Shield", "Rare");
-        itemRarities.put("Bow", "Epic");
-        itemRarities.put("Potion", "Common");
-        itemRarities.put("Helmet", "Rare");
-        itemRarities.put("Armor", "Epic");
-        itemRarities.put("Boots", "Common");
-        itemRarities.put("Ring", "Legendary");
-        itemRarities.put("Amulet", "Mythic");
-        itemRarities.put("Dagger", "Rare");
-    }
 
-    // Probability weights for each rarity
-    private static final Map<String, Integer> rarityWeights = new HashMap<>();
-    static {
-        rarityWeights.put("Common", 50); // 50% chance for Common
-        rarityWeights.put("Rare", 30);   // 30% chance for Rare
-        rarityWeights.put("Epic", 15);   // 15% chance for Epic
-        rarityWeights.put("Legendary", 4); // 4% chance for Legendary
-        rarityWeights.put("Mythic", 1);  // 1% chance for Mythic
-        rarityWeights.put("Secret", 0);  // 0% for Secret, but can be modified later if needed
-    }
+    private static final String[] commonItems = {
+        "Sword (Common)", "Shield (Common)", "Bow (Common)"
+    };
+
+    private static final String[] rareItems = {
+        "Potion (Rare)", "Helmet (Rare)"
+    };
+
+    private static final String[] epicItems = {
+        "Armor (Epic)", "Boots (Epic)"
+    };
+
+    private static final String[] legendaryItems = {
+        "Ring (Legendary)"
+    };
+
+    private static final String[] mythicItems = {
+        "Amulet (Mythic)"
+    };
+
+    private static final Random random = new Random();
 
     public static String getRandomItem() {
-        Random rand = new Random();
-        List<String> obtainableItems = new ArrayList<>(itemRarities.keySet());
+        int roll = random.nextInt(100) + 1; // 1-100
 
-        // Simulate the random roll based on rarity weights
-        int totalWeight = rarityWeights.values().stream().mapToInt(Integer::intValue).sum();
-        int randomRoll = rand.nextInt(totalWeight);
-
-        // Pick an item based on weight distribution
-        String chosenItem = null;
-        int currentWeight = 0;
-        for (String item : obtainableItems) {
-            String rarity = itemRarities.get(item);
-            currentWeight += rarityWeights.get(rarity);
-
-            if (randomRoll < currentWeight) {
-                chosenItem = item;
-                break;
-            }
+        if (roll <= 40) {
+            return commonItems[random.nextInt(commonItems.length)];
+        } else if (roll <= 65) {
+            return rareItems[random.nextInt(rareItems.length)];
+        } else if (roll <= 85) {
+            return epicItems[random.nextInt(epicItems.length)];
+        } else if (roll <= 95) {
+            return legendaryItems[random.nextInt(legendaryItems.length)];
+        } else {
+            return mythicItems[random.nextInt(mythicItems.length)];
         }
-
-        return chosenItem + " (" + itemRarities.get(chosenItem) + ")";
     }
 
-    // Provide access to itemRarities via a getter method
-    public static Map<String, String> getItemRarities() {
-        return itemRarities;
+    // Force a specific rarity (used in Admin panel)
+    public static String forceRarity(String rarity) {
+        switch (rarity) {
+            case "Common (Gray)":
+                return commonItems[random.nextInt(commonItems.length)];
+            case "Rare (Blue)":
+                return rareItems[random.nextInt(rareItems.length)];
+            case "Epic (Purple)":
+                return epicItems[random.nextInt(epicItems.length)];
+            case "Legendary (Orange)":
+                return legendaryItems[random.nextInt(legendaryItems.length)];
+            case "Mythic (Red)":
+                return mythicItems[random.nextInt(mythicItems.length)];
+            default:
+                return "Unknown Item";
+        }
     }
 }
